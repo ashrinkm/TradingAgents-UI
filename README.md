@@ -1,248 +1,379 @@
-<p align="center">
-  <img src="assets/TauricResearch.png" style="width: 60%; height: auto;">
-</p>
-
-<div align="center" style="line-height: 1;">
-  <a href="https://arxiv.org/abs/2412.20138" target="_blank"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2412.20138-B31B1B?logo=arxiv"/></a>
-  <a href="https://discord.com/invite/hk9PGKShPK" target="_blank"><img alt="Discord" src="https://img.shields.io/badge/Discord-TradingResearch-7289da?logo=discord&logoColor=white&color=7289da"/></a>
-  <a href="./assets/wechat.png" target="_blank"><img alt="WeChat" src="https://img.shields.io/badge/WeChat-TauricResearch-brightgreen?logo=wechat&logoColor=white"/></a>
-  <a href="https://x.com/TauricResearch" target="_blank"><img alt="X Follow" src="https://img.shields.io/badge/X-TauricResearch-white?logo=x&logoColor=white"/></a>
-  <br>
-  <a href="https://github.com/TauricResearch/" target="_blank"><img alt="Community" src="https://img.shields.io/badge/Join_GitHub_Community-TauricResearch-14C290?logo=discourse"/></a>
-</div>
+# TradingAgents Web UI
 
 <div align="center">
-  <!-- Keep these links. Translations will automatically update with the README. -->
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=de">Deutsch</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=es">Español</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=fr">français</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ja">日本語</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ko">한국어</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=pt">Português</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ru">Русский</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=zh">中文</a>
+
+A modern, user-friendly web interface for the [TradingAgents](https://github.com/TauricResearch/TradingAgents) multi-agent trading framework.
+
+**Real-time monitoring • Easy configuration • Historical analysis review**
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+
 </div>
 
 ---
 
-# TradingAgents: Multi-Agents LLM Financial Trading Framework
+## 🎯 Overview
 
-## News
-- [2026-03] **TradingAgents v0.2.2** released with GPT-5.4/Gemini 3.1/Claude 4.6 model coverage, five-tier rating scale, OpenAI Responses API, Anthropic effort control, and cross-platform stability.
-- [2026-02] **TradingAgents v0.2.0** released with multi-provider LLM support (GPT-5.x, Gemini 3.x, Claude 4.x, Grok 4.x) and improved system architecture.
-- [2026-01] **Trading-R1** [Technical Report](https://arxiv.org/abs/2509.11420) released, with [Terminal](https://github.com/TauricResearch/Trading-R1) expected to land soon.
+This Web UI provides an intuitive interface for running trading analyses using the TradingAgents framework. Instead of using the command line, you get a beautiful dark-themed dashboard where you can:
 
-<div align="center">
-<a href="https://www.star-history.com/#TauricResearch/TradingAgents&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date" />
-   <img alt="TradingAgents Star History" src="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date" style="width: 80%; height: auto;" />
- </picture>
-</a>
-</div>
+- **Run analyses** with just a few clicks
+- **Watch progress** in real-time as agents work
+- **Review history** of all past analyses
+- **Configure settings** easily through the UI
 
-> 🎉 **TradingAgents** officially released! We have received numerous inquiries about the work, and we would like to express our thanks for the enthusiasm in our community.
->
-> So we decided to fully open-source the framework. Looking forward to building impactful projects with you!
+Perfect for researchers, traders, and anyone who wants to leverage multi-agent LLM trading analysis without the complexity of command-line tools.
 
-<div align="center">
+## ✨ Features
 
-🚀 [TradingAgents](#tradingagents-framework) | ⚡ [Installation & CLI](#installation-and-cli) | 🎬 [Demo](https://www.youtube.com/watch?v=90gr5lwjIho) | 📦 [Package Usage](#tradingagents-package) | 🤝 [Contributing](#contributing) | 📄 [Citation](#citation)
+### 📊 Real-Time Analysis Monitoring
+- Watch your trading analysis progress step-by-step
+- Live log streaming with status updates
+- Visual progress indicators for each phase:
+  - Market data fetching
+  - Individual analyst reports (Fundamentals, Sentiment, News, Technical)
+  - Bullish/bearish research debates
+  - Trading plan development
+  - Risk assessment
+  - Final portfolio decision
 
-</div>
+### 🎯 Intuitive Dashboard
+- Clean, modern dark-themed interface
+- Simple ticker symbol input
+- Date picker for historical or current analysis
+- Customizable analyst selection
+- Adjustable analysis depth (1-5 levels)
 
-## TradingAgents Framework
+### 📈 Historical Analysis Review
+- Browse all past analyses
+- Filter by ticker, date, or status
+- View detailed reports from each analyst
+- See research team debates
+- Review final trading decisions and reasoning
 
-TradingAgents is a multi-agent trading framework that mirrors the dynamics of real-world trading firms. By deploying specialized LLM-powered agents: from fundamental analysts, sentiment experts, and technical analysts, to trader, risk management team, the platform collaboratively evaluates market conditions and informs trading decisions. Moreover, these agents engage in dynamic discussions to pinpoint the optimal strategy.
+### ⚙️ Easy Configuration
+- Built-in settings page
+- Support for multiple LLM providers:
+  - OpenAI GPT-5.x
+  - Google Gemini 3.x
+  - Anthropic Claude 4.x
+  - X.AI Grok 4.x
+  - Z.AI GLM 5.x
+  - Custom endpoints
+- Persistent configuration storage
 
-<p align="center">
-  <img src="assets/schema.png" style="width: 100%; height: auto;">
-</p>
+### 🔄 Background Processing
+- Long-running analyses execute in background
+- Continue using the UI while analyses run
+- Run multiple analyses simultaneously
+- Stop analyses mid-execution if needed
+- Automatic progress tracking
 
-> TradingAgents framework is designed for research purposes. Trading performance may vary based on many factors, including the chosen backbone language models, model temperature, trading periods, the quality of data, and other non-deterministic factors. [It is not intended as financial, investment, or trading advice.](https://tauric.ai/disclaimer/)
+## 🚀 Quick Start
 
-Our framework decomposes complex trading tasks into specialized roles. This ensures the system achieves a robust, scalable approach to market analysis and decision-making.
-
-### Analyst Team
-- Fundamentals Analyst: Evaluates company financials and performance metrics, identifying intrinsic values and potential red flags.
-- Sentiment Analyst: Analyzes social media and public sentiment using sentiment scoring algorithms to gauge short-term market mood.
-- News Analyst: Monitors global news and macroeconomic indicators, interpreting the impact of events on market conditions.
-- Technical Analyst: Utilizes technical indicators (like MACD and RSI) to detect trading patterns and forecast price movements.
-
-<p align="center">
-  <img src="assets/analyst.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-### Researcher Team
-- Comprises both bullish and bearish researchers who critically assess the insights provided by the Analyst Team. Through structured debates, they balance potential gains against inherent risks.
-
-<p align="center">
-  <img src="assets/researcher.png" width="70%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-### Trader Agent
-- Composes reports from the analysts and researchers to make informed trading decisions. It determines the timing and magnitude of trades based on comprehensive market insights.
-
-<p align="center">
-  <img src="assets/trader.png" width="70%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-### Risk Management and Portfolio Manager
-- Continuously evaluates portfolio risk by assessing market volatility, liquidity, and other risk factors. The risk management team evaluates and adjusts trading strategies, providing assessment reports to the Portfolio Manager for final decision.
-- The Portfolio Manager approves/rejects the transaction proposal. If approved, the order will be sent to the simulated exchange and executed.
-
-<p align="center">
-  <img src="assets/risk.png" width="70%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-## Installation and CLI
+### Prerequisites
+- Python 3.8 or higher
+- API key from your preferred LLM provider
 
 ### Installation
 
-Clone TradingAgents:
 ```bash
-git clone https://github.com/TauricResearch/TradingAgents.git
-cd TradingAgents
-```
+# Clone the repository
+git clone https://github.com/ashrinkm/TradingAgents-UI.git
+cd TradingAgents-UI
 
-Create a virtual environment in any of your favorite environment managers:
-```bash
-conda create -n tradingagents python=3.13
-conda activate tradingagents
-```
+# Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-Install the package and its dependencies:
-```bash
-pip install .
-```
-
-### Required APIs
-
-TradingAgents supports multiple LLM providers. Set the API key for your chosen provider:
-
-```bash
-export OPENAI_API_KEY=...          # OpenAI (GPT)
-export GOOGLE_API_KEY=...          # Google (Gemini)
-export ANTHROPIC_API_KEY=...       # Anthropic (Claude)
-export XAI_API_KEY=...             # xAI (Grok)
-export OPENROUTER_API_KEY=...      # OpenRouter
-export ALPHA_VANTAGE_API_KEY=...   # Alpha Vantage
-```
-
-For local models, configure Ollama with `llm_provider: "ollama"` in your config.
-
-Alternatively, copy `.env.example` to `.env` and fill in your keys:
-```bash
-cp .env.example .env
-```
-
-### CLI Usage
-
-Launch the interactive CLI:
-```bash
-tradingagents          # installed command
-python -m cli.main     # alternative: run directly from source
-```
-You will see a screen where you can select your desired tickers, analysis date, LLM provider, research depth, and more.
-
-<p align="center">
-  <img src="assets/cli/cli_init.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-An interface will appear showing results as they load, letting you track the agent's progress as it runs.
-
-<p align="center">
-  <img src="assets/cli/cli_news.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-<p align="center">
-  <img src="assets/cli/cli_transaction.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-## Web UI
-
-**New!** We now provide a modern web interface for TradingAgents with real-time progress monitoring, historical analysis review, and easy configuration management.
-
-### Quick Start
-
-```bash
-# Install Streamlit
+# Install dependencies
+pip install -r requirements.txt
 pip install streamlit
 
-# Run the Web UI
-cd TradingAgents
+# Run the UI
 streamlit run web_ui.py --server.port 8501
 ```
 
-Then open `http://localhost:8501` in your browser.
+Open your browser to `http://localhost:8501` and you're ready to go!
 
-### Features
+### First-Time Setup
 
-- 📊 **Real-time progress tracking** - Watch analyses unfold step-by-step
-- 🎯 **Easy configuration** - Intuitive settings management
-- 📈 **History browser** - Review and search past analyses
-- 🔄 **Background processing** - Run multiple analyses simultaneously
-- 🌙 **Dark mode** - Easy on the eyes for long sessions
+1. **Configure API Key**: Click "Settings" in the navigation
+2. **Enter your API key** from your LLM provider
+3. **Select provider** and model
+4. **Save settings**
 
-**📖 [Full Web UI Documentation](./WEB_UI_README.md)**
+You're now ready to run your first analysis!
 
-## TradingAgents Package
+## 📖 Usage
 
-### Implementation Details
+### Running an Analysis
 
-We built TradingAgents with LangGraph to ensure flexibility and modularity. The framework supports multiple LLM providers: OpenAI, Google, Anthropic, xAI, OpenRouter, and Ollama.
+1. **Enter Ticker**: Type a stock symbol (e.g., AAPL, GOOGL, TSLA, NVDA)
+2. **Select Date**: Choose analysis date (defaults to today)
+3. **Choose Analysts**: Select which analysts to include:
+   - ✅ **Fundamentals Analyst** - Company financials and metrics
+   - ✅ **Sentiment Analyst** - Social media and public sentiment
+   - ✅ **News Analyst** - Global news and macro events
+   - ✅ **Technical Analyst** - Chart patterns and indicators
+4. **Set Depth**: Choose 1-5 (higher = more thorough, slower)
+5. **Start**: Click "Start Analysis"
 
-### Python Usage
+### Monitoring Progress
 
-To use TradingAgents inside your code, you can import the `tradingagents` module and initialize a `TradingAgentsGraph()` object. The `.propagate()` function will return a decision. You can run `main.py`, here's also a quick example:
+Watch the analysis unfold in real-time:
 
-```python
-from tradingagents.graph.trading_graph import TradingAgentsGraph
-from tradingagents.default_config import DEFAULT_CONFIG
+- ✓ **Completed steps** show green checkmarks
+- ● **Running steps** show animated indicators  
+- ○ **Pending steps** show what's coming next
 
-ta = TradingAgentsGraph(debug=True, config=DEFAULT_CONFIG.copy())
+Each phase displays live logs so you can see exactly what the agents are thinking.
 
-# forward propagate
-_, decision = ta.propagate("NVDA", "2026-01-15")
-print(decision)
+### Viewing Results
+
+After completion, navigate to "History" to:
+- Browse all past analyses
+- Filter by ticker or date
+- Click any analysis to see:
+  - Executive summary
+  - Individual analyst reports
+  - Research team debates
+  - Final trading decision
+  - Risk assessment
+  - Complete reasoning chain
+
+### Background Jobs
+
+- Start an analysis and continue using the UI
+- Check job status on the "Running Jobs" page
+- Stop jobs if they're taking too long
+- All jobs are tracked and recoverable
+
+## 🛠️ Alternative: Flask UI
+
+Prefer a traditional web framework? We also provide a Flask version:
+
+```bash
+# Install Flask
+pip install flask
+
+# Run Flask UI
+python app.py
 ```
 
-You can also adjust the default configuration to set your own choice of LLMs, debate rounds, etc.
+Open `http://localhost:5000`
 
-```python
-from tradingagents.graph.trading_graph import TradingAgentsGraph
-from tradingagents.default_config import DEFAULT_CONFIG
+Both UIs provide the same functionality - choose whichever you prefer!
 
-config = DEFAULT_CONFIG.copy()
-config["llm_provider"] = "openai"        # openai, google, anthropic, xai, openrouter, ollama
-config["deep_think_llm"] = "gpt-5.2"     # Model for complex reasoning
-config["quick_think_llm"] = "gpt-5-mini" # Model for quick tasks
-config["max_debate_rounds"] = 2
-
-ta = TradingAgentsGraph(debug=True, config=config)
-_, decision = ta.propagate("NVDA", "2026-01-15")
-print(decision)
-```
-
-See `tradingagents/default_config.py` for all configuration options.
-
-## Contributing
-
-We welcome contributions from the community! Whether it's fixing a bug, improving documentation, or suggesting a new feature, your input helps make this project better. If you are interested in this line of research, please consider joining our open-source financial AI research community [Tauric Research](https://tauric.ai/).
-
-## Citation
-
-Please reference our work if you find *TradingAgents* provides you with some help :)
+## 📁 Project Structure
 
 ```
-@misc{xiao2025tradingagentsmultiagentsllmfinancial,
-      title={TradingAgents: Multi-Agents LLM Financial Trading Framework}, 
-      author={Yijia Xiao and Edward Sun and Di Luo and Wei Wang},
-      year={2025},
-      eprint={2412.20138},
-      archivePrefix={arXiv},
-      primaryClass={q-fin.TR},
-      url={https://arxiv.org/abs/2412.20138}, 
+TradingAgents-UI/
+├── web_ui.py                 # Streamlit UI (recommended)
+├── app.py                    # Flask UI (alternative)
+├── background_worker.py      # Background analysis processor
+├── templates/                # HTML templates for Flask
+│   └── index.html
+├── tradingagents/           # Core TradingAgents framework
+├── assets/                  # Images and documentation assets
+├── data/                    # Runtime data (created automatically)
+│   ├── settings.json        # Your configuration
+│   ├── analyses.json        # Analysis history
+│   └── jobs/                # Background job tracking
+├── run_web.sh               # Streamlit launcher script
+├── run_flask.sh             # Flask launcher script
+└── requirements.txt         # Python dependencies
+```
+
+## 🔧 Advanced Configuration
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+# API Keys
+OPENAI_API_KEY=your-key-here
+GOOGLE_API_KEY=your-key-here
+ANTHROPIC_API_KEY=your-key-here
+XAI_API_KEY=your-key-here
+
+# Custom API endpoint (optional)
+OPENAI_BASE_URL=https://api.openai.com/v1
+```
+
+### Custom Models
+
+The UI supports any OpenAI-compatible API endpoint:
+
+```json
+{
+  "api_key": "your-key",
+  "base_url": "https://your-custom-endpoint.com/v1",
+  "model": "your-model-name",
+  "provider_name": "Custom Provider"
 }
 ```
+
+### Analysis Depth Guide
+
+- **Depth 1**: Quick analysis (1-2 minutes) - Good for screening
+- **Depth 2**: Standard analysis (2-3 minutes) - Balanced speed/detail
+- **Depth 3**: Detailed analysis (3-5 minutes) - Recommended default
+- **Depth 4**: Comprehensive (5-7 minutes) - Deep analysis
+- **Depth 5**: Exhaustive (7-10 minutes) - Maximum detail
+
+## 🐳 Docker Deployment
+
+```bash
+# Build image
+docker build -t tradingagents-ui .
+
+# Run container
+docker run -p 8501:8501 tradingagents-ui
+```
+
+Or use Docker Compose:
+
+```yaml
+version: '3.8'
+services:
+  tradingagents-ui:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+```
+
+## 🌐 Cloud Deployment
+
+### Streamlit Cloud (Free)
+
+1. Push this repo to GitHub
+2. Visit [share.streamlit.io](https://share.streamlit.io)
+3. Connect your repo
+4. Deploy with one click
+
+### Heroku
+
+```bash
+heroku create tradingagents-ui
+heroku config:set OPENAI_API_KEY=your-key
+git push heroku main
+```
+
+### AWS/GCP/Azure
+
+Use the Docker image for deployment on any cloud platform.
+
+## 🔍 Troubleshooting
+
+### UI Won't Start
+
+```bash
+# Ensure all dependencies are installed
+pip install -r requirements.txt
+pip install streamlit
+
+# Check Python version (3.8+ required)
+python --version
+```
+
+### Analysis Fails to Start
+
+- ✅ Check API key is configured in Settings
+- ✅ Verify base_url is correct
+- ✅ Ensure you have API credits/quota
+- ✅ Check logs in browser console (F12)
+
+### Background Jobs Not Running
+
+```bash
+# Ensure data directory exists
+mkdir -p data/jobs
+
+# Check permissions
+chmod +x background_worker.py
+```
+
+### Can't See Past Analyses
+
+- Check `data/analyses.json` exists
+- Verify analyses completed successfully
+- Look for error messages in job files
+
+## 💡 Tips & Best Practices
+
+### Performance
+- **Quick screening**: Use depth 1-2 for initial ticker scans
+- **Deep analysis**: Use depth 4-5 for promising opportunities
+- **Parallel analysis**: Run multiple analyses for portfolio review
+- **Resource management**: Stop unused analyses to free resources
+
+### Accuracy
+- **Balanced view**: Select all analysts for comprehensive analysis
+- **Depth matters**: Use higher depth for complex decisions
+- **Historical patterns**: Review past analyses to identify trends
+- **Compare**: Run multiple tickers before making decisions
+
+### Cost Management
+- **Start small**: Use depth 1-2 for initial screening
+- **Be selective**: Increase depth only for promising opportunities
+- **Monitor usage**: Check API usage in provider dashboard
+- **Rate limiting**: Add delays between bulk analyses
+
+## 🤝 Contributing
+
+Contributions are welcome! Areas for improvement:
+
+- 📊 Additional chart visualizations
+- 📄 Export formats (PDF, Excel)
+- 💼 Portfolio tracking features
+- 🔔 Price alerts and notifications
+- 📈 Backtesting integration
+- 🌍 Multi-language support
+- 🎨 Theme customization
+
+## 📚 Related Projects
+
+- **[TradingAgents](https://github.com/TauricResearch/TradingAgents)** - The underlying multi-agent framework
+- **[Trading-R1](https://github.com/TauricResearch/Trading-R1)** - Advanced trading terminal
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+Built on top of the excellent [TradingAgents](https://github.com/TauricResearch/TradingAgents) framework by [Tauric Research](https://tauric.ai/).
+
+## ⚠️ Disclaimer
+
+This tool is for **research and educational purposes only**. Trading performance may vary based on many factors including:
+- Chosen LLM provider and model
+- Model parameters (temperature, etc.)
+- Trading period and market conditions
+- Data quality and timeliness
+
+**This is not financial, investment, or trading advice.** Always conduct your own research and consult with qualified professionals before making trading decisions. Past performance does not guarantee future results.
+
+## 🆘 Support
+
+- **Documentation**: [WEB_UI_README.md](./WEB_UI_README.md)
+- **Issues**: [GitHub Issues](https://github.com/ashrinkm/TradingAgents-UI/issues)
+- **Original Framework**: [TradingAgents](https://github.com/TauricResearch/TradingAgents)
+- **Community**: [Discord](https://discord.com/invite/hk9PGKShPK)
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the trading research community**
+
+⭐ Star this repo if you find it useful! ⭐
+
+</div>
