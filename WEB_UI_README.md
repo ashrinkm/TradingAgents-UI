@@ -1,185 +1,26 @@
-# TradingAgents Web UI
+# TradingAgents Web UI - Detailed Documentation
 
-A modern, user-friendly web interface for the TradingAgents multi-agent trading framework. This UI provides an intuitive way to run trading analyses, monitor progress in real-time, and review historical results.
+Comprehensive guide for the TradingAgents Flask Web UI.
 
-## Features
+## Table of Contents
 
-### 🎯 **Real-Time Analysis Monitoring**
-- Watch your trading analysis progress step-by-step
-- Live log streaming with status updates
-- Visual progress indicators for each analyst and research phase
-
-### 📊 **Interactive Dashboard**
-- Clean, modern dark-themed interface
-- Easy ticker symbol input and date selection
-- Customizable analyst selection (Fundamentals, Sentiment, News, Technical)
-- Adjustable analysis depth (1-5 levels)
-
-### 📈 **Historical Analysis Review**
-- Browse and search past analyses
-- Filter by ticker symbol, date, or status
-- View detailed analyst reports and final decisions
-- Export analysis results
-
-### ⚙️ **Settings Management**
-- Configure API keys and endpoints
-- Select from multiple LLM providers (GPT-5.x, Gemini 3.x, Claude 4.x, Grok 4.x)
-- Customize model parameters
-- Persistent configuration storage
-
-### 🔄 **Background Job Processing**
-- Long-running analyses execute in the background
-- Continue working while analyses run
-- Automatic job status tracking
-- Ability to stop running analyses
-
-## Installation
-
-### Prerequisites
-
-- Python 3.8 or higher
-- pip package manager
-- Virtual environment (recommended)
-
-### Option 1: Streamlit UI (Recommended)
-
-The Streamlit version provides a modern, responsive interface with real-time updates.
-
-```bash
-# Navigate to the TradingAgents directory
-cd TradingAgents
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-pip install streamlit
-
-# Run the Streamlit UI
-./run_web.sh
-# Or manually:
-# streamlit run web_ui.py --server.port 8501 --server.address 0.0.0.0
-```
-
-The UI will be available at `http://localhost:8501`
-
-### Option 2: Flask UI
-
-The Flask version provides a lightweight alternative with a traditional web interface.
-
-```bash
-# Navigate to the TradingAgents directory
-cd TradingAgents
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-pip install flask
-
-# Run the Flask UI
-./run_flask.sh
-# Or manually:
-# python app.py
-```
-
-The UI will be available at `http://localhost:5000`
-
-## Configuration
-
-### First-Time Setup
-
-1. **Open the Settings Page**: Click the "Settings" button in the navigation
-2. **Enter Your API Key**: Add your LLM provider API key
-3. **Select Provider**: Choose your preferred LLM provider and model
-4. **Save Settings**: Click "Save" to persist your configuration
-
-### Supported LLM Providers
-
-- **Z.AI GLM 5.1** (Default)
-- **OpenAI GPT-5.x** series
-- **Google Gemini 3.x** series
-- **Anthropic Claude 4.x** series
-- **X.AI Grok 4.x** series
-
-### API Configuration
-
-The Web UI supports multiple API endpoints:
-
-```json
-{
-  "api_key": "your-api-key-here",
-  "base_url": "https://api.openai.com/v1",
-  "model": "gpt-5",
-  "provider_name": "OpenAI GPT-5"
-}
-```
-
-## Usage
-
-### Running an Analysis
-
-1. **Select Ticker**: Enter a stock ticker symbol (e.g., AAPL, GOOGL, TSLA)
-2. **Choose Date**: Select the analysis date (defaults to today)
-3. **Select Analysts**: Choose which analysts to include:
-   - Fundamentals Analyst
-   - Sentiment Analyst
-   - News Analyst
-   - Technical Analyst
-4. **Set Depth**: Choose analysis depth (1-5, where 5 is most comprehensive)
-5. **Start Analysis**: Click "Start Analysis" to begin
-
-### Monitoring Progress
-
-The analysis progresses through these stages:
-
-1. **Market Data** - Fetching current market information
-2. **Analysts** - Running individual analyst reports
-3. **Research** - Bullish and bearish research debates
-4. **Trading Plan** - Developing trading strategy
-5. **Risk Assessment** - Evaluating portfolio risks
-6. **Final Decision** - Portfolio manager's final recommendation
-
-Each stage shows:
-- ✅ Completed steps
-- 🔵 Currently running step
-- ⭕ Pending steps
-
-### Viewing Results
-
-After completion:
-1. Navigate to the "History" page
-2. Browse past analyses by ticker or date
-3. Click on any analysis to view:
-   - Executive summary
-   - Individual analyst reports
-   - Research team debates
-   - Trading decision and reasoning
-   - Risk assessment
-
-### Background Jobs
-
-- Analyses run in background processes
-- Continue using the UI while analyses execute
-- Check job status in real-time
-- Stop long-running analyses if needed
-- Automatic job tracking and recovery
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [Deployment](#deployment)
+- [API Reference](#api-reference)
+- [Advanced Usage](#advanced-usage)
+- [Performance Tuning](#performance-tuning)
 
 ## Architecture
 
 ### Components
 
 ```
-web_ui.py                 # Streamlit UI (main interface)
-app.py                    # Flask UI (alternative interface)
+app.py                    # Flask web application (main entry point)
 background_worker.py      # Background analysis processor
-templates/                # HTML templates for Flask UI
-  └── index.html
-data/                     # Persistent data storage
+templates/
+  └── index.html         # Main UI template (51KB single-file app)
+data/
   ├── settings.json       # User configuration
   ├── analyses.json       # Analysis history
   └── jobs/               # Background job tracking
@@ -187,138 +28,554 @@ data/                     # Persistent data storage
 
 ### Data Flow
 
-1. User submits analysis request via UI
-2. Background worker process spawned
-3. Worker invokes TradingAgents framework
-4. Progress updates written to job status file
-5. UI polls for updates and displays progress
-6. Final results saved to analyses history
+1. **User Request** → Flask route handler
+2. **Background Process** → Spawn worker for analysis
+3. **Progress Updates** → Worker writes to job status file
+4. **UI Polling** → Frontend fetches job status via AJAX
+5. **Completion** → Results saved to analyses.json
+6. **Display** → User views results in History page
+
+### Job System
+
+Background jobs are tracked via JSON files in `data/jobs/`:
+
+```json
+{
+  "job_id": "AAPL_20260402_193045_abc123",
+  "ticker": "AAPL",
+  "status": "running",
+  "progress": {
+    "market": "done",
+    "analysts": "active",
+    "research": "pending"
+  },
+  "logs": ["Starting analysis...", "Fetching market data..."],
+  "started_at": "2026-04-02T19:30:45",
+  "stop_requested": false
+}
+```
+
+## Configuration
+
+### Settings Structure
+
+```json
+{
+  "api_key": "sk-...",
+  "base_url": "https://api.openai.com/v1",
+  "model": "gpt-5",
+  "provider_name": "OpenAI"
+}
+```
+
+### Environment Variables
+
+Optional `.env` file:
+
+```bash
+# LLM Provider Keys
+OPENAI_API_KEY=sk-...
+GOOGLE_API_KEY=...
+ANTHROPIC_API_KEY=...
+XAI_API_KEY=...
+
+# Custom endpoint
+OPENAI_BASE_URL=https://api.openai.com/v1
+```
+
+### Multiple Providers
+
+Switch between providers in Settings:
+
+| Provider | Base URL | Models |
+|----------|----------|--------|
+| OpenAI | `https://api.openai.com/v1` | gpt-5, gpt-5-mini, gpt-5.2 |
+| Google | `https://generativelanguage.googleapis.com/v1` | gemini-3.0-flash, gemini-3.1-pro |
+| Anthropic | `https://api.anthropic.com/v1` | claude-4-sonnet, claude-4.6-opus |
+| X.AI | `https://api.x.ai/v1` | grok-4, grok-4-heavy |
+| Z.AI | `https://nano-gpt.com/api/v1` | zai-org/glm-5, zai-org/glm-5.1 |
 
 ## Deployment
 
-### Local Development
+### Production Flask Server
+
+Use Gunicorn for production:
 
 ```bash
-# Streamlit (recommended for development)
-streamlit run web_ui.py
+pip install gunicorn
 
-# Flask (alternative)
-python app.py
+# 4 worker processes
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
+
+# With timeout for long analyses
+gunicorn -w 4 -b 0.0.0.0:5000 --timeout 600 app:app
 ```
 
-### Production Deployment
+### Nginx Reverse Proxy
 
-#### Streamlit Cloud
+```nginx
+server {
+    listen 80;
+    server_name tradingagents.yourdomain.com;
 
-1. Push your code to GitHub
-2. Connect to [Streamlit Cloud](https://streamlit.io/cloud)
-3. Deploy with one click
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 600s;
+    }
+}
+```
 
-#### Docker
+### Docker Production
 
 ```dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-RUN pip install streamlit
 
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir flask gunicorn
+
+# Copy application
 COPY . .
 
-EXPOSE 8501
-CMD ["streamlit", "run", "web_ui.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+# Create data directories
+RUN mkdir -p data/jobs
+
+# Expose port
+EXPOSE 5000
+
+# Run with Gunicorn
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "--timeout", "600", "app:app"]
 ```
 
-Build and run:
+### Heroku Deployment
+
 ```bash
-docker build -t tradingagents-ui .
-docker run -p 8501:8501 tradingagents-ui
+# Create app
+heroku create tradingagents-ui
+
+# Set environment
+heroku config:set OPENAI_API_KEY=sk-...
+
+# Deploy
+git push heroku main
+
+# Scale
+heroku ps:scale web=1
 ```
 
-#### Flask with Gunicorn
+**Procfile:**
+```
+web: gunicorn app:app --timeout 600
+```
 
+### AWS EC2 Deployment
+
+1. **Launch EC2 instance** (Ubuntu 20.04+)
+2. **Install dependencies:**
 ```bash
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
+sudo apt update
+sudo apt install python3-pip nginx
+pip3 install -r requirements.txt
+pip3 install flask gunicorn
+```
+3. **Clone and configure:**
+```bash
+git clone https://github.com/ashrinkm/TradingAgents-UI.git
+cd TradingAgents-UI
+```
+4. **Create systemd service:**
+```bash
+sudo nano /etc/systemd/system/tradingagents.service
+```
+```ini
+[Unit]
+Description=TradingAgents UI
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/TradingAgents-UI
+Environment="OPENAI_API_KEY=sk-..."
+ExecStart=/usr/bin/python3 -m gunicorn -w 4 -b 127.0.0.1:5000 --timeout 600 app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+5. **Enable and start:**
+```bash
+sudo systemctl enable tradingagents
+sudo systemctl start tradingagents
+```
+6. **Configure Nginx** (see above)
+
+## API Reference
+
+### REST Endpoints
+
+#### `GET /`
+Main UI page
+
+#### `GET /api/settings`
+Get current settings
+
+**Response:**
+```json
+{
+  "api_key": "sk-...",
+  "base_url": "https://api.openai.com/v1",
+  "model": "gpt-5",
+  "provider_name": "OpenAI"
+}
+```
+
+#### `POST /api/settings`
+Update settings
+
+**Request:**
+```json
+{
+  "api_key": "sk-...",
+  "base_url": "https://api.openai.com/v1",
+  "model": "gpt-5",
+  "provider_name": "OpenAI"
+}
+```
+
+#### `POST /api/analyze`
+Start new analysis
+
+**Request:**
+```json
+{
+  "ticker": "AAPL",
+  "date": "2026-04-02",
+  "analysts": ["fundamentals", "sentiment", "news", "technical"],
+  "depth": 3
+}
+```
+
+**Response:**
+```json
+{
+  "job_id": "AAPL_20260402_193045_abc123",
+  "status": "pending"
+}
+```
+
+#### `GET /api/jobs`
+Get running jobs
+
+**Response:**
+```json
+[
+  {
+    "job_id": "AAPL_20260402_193045_abc123",
+    "ticker": "AAPL",
+    "status": "running",
+    "progress": {...}
+  }
+]
+```
+
+#### `GET /api/job/<job_id>`
+Get specific job status
+
+#### `POST /api/job/<job_id>/stop`
+Stop running job
+
+#### `GET /api/analyses`
+Get analysis history
+
+**Response:**
+```json
+[
+  {
+    "id": "job_123",
+    "ticker": "AAPL",
+    "date": "2026-04-02",
+    "status": "completed",
+    "decision": "BUY",
+    "completed_at": "2026-04-02T19:35:22"
+  }
+]
+```
+
+#### `GET /api/analysis/<analysis_id>`
+Get specific analysis details
+
+## Advanced Usage
+
+### Batch Analysis
+
+Run multiple analyses via script:
+
+```python
+import requests
+import time
+
+tickers = ["AAPL", "GOOGL", "MSFT", "AMZN", "NVDA"]
+base_url = "http://localhost:5000"
+
+for ticker in tickers:
+    response = requests.post(f"{base_url}/api/analyze", json={
+        "ticker": ticker,
+        "date": "2026-04-02",
+        "analysts": ["fundamentals", "sentiment", "news", "technical"],
+        "depth": 3
+    })
+    print(f"Started {ticker}: {response.json()['job_id']}")
+    time.sleep(2)  # Rate limiting
+```
+
+### Custom Analysis Pipeline
+
+Modify `background_worker.py` to customize:
+
+```python
+# Skip certain analysts
+selected_analysts = ["fundamentals", "technical"]  # Skip sentiment/news
+
+# Adjust debate rounds
+config["max_debate_rounds"] = 3  # More thorough research
+
+# Custom data vendors
+config["data_vendors"] = {
+    "market": "alpha_vantage",  # Instead of yfinance
+    "news": "newsapi"
+}
+```
+
+### Export Analysis Results
+
+```python
+import json
+from pathlib import Path
+
+# Load analyses
+analyses = json.loads(Path("data/analyses.json").read_text())
+
+# Export to CSV
+import csv
+with open("analyses_export.csv", "w", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["ticker", "date", "decision", "confidence"])
+    writer.writeheader()
+    for analysis in analyses:
+        writer.writerow({
+            "ticker": analysis["ticker"],
+            "date": analysis["date"],
+            "decision": analysis["result"]["decision"],
+            "confidence": analysis["result"]["confidence"]
+        })
+```
+
+## Performance Tuning
+
+### Database Optimization
+
+For large-scale usage, replace JSON files with SQLite:
+
+```python
+import sqlite3
+
+conn = sqlite3.connect('data/tradingagents.db')
+c = conn.cursor()
+
+c.execute('''
+    CREATE TABLE IF NOT EXISTS analyses (
+        id TEXT PRIMARY KEY,
+        ticker TEXT,
+        date TEXT,
+        status TEXT,
+        result TEXT,
+        created_at TIMESTAMP
+    )
+''')
+
+c.execute('CREATE INDEX idx_ticker ON analyses(ticker)')
+c.execute('CREATE INDEX idx_date ON analyses(date)')
+```
+
+### Caching
+
+Cache market data to reduce API calls:
+
+```python
+from functools import lru_cache
+import pickle
+
+@lru_cache(maxsize=128)
+def get_market_data_cached(ticker, date):
+    # Cache key is (ticker, date) tuple
+    return get_market_data(ticker, date)
+```
+
+### Rate Limiting
+
+Implement rate limiting for API calls:
+
+```python
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
+
+@app.route("/api/analyze", methods=["POST"])
+@limiter.limit("10 per hour")
+def analyze():
+    # Analysis logic
+    pass
+```
+
+### Background Worker Scaling
+
+Run multiple worker processes:
+
+```python
+# In background_worker.py
+import multiprocessing
+
+def run_analysis_parallel(tickers):
+    with multiprocessing.Pool(processes=4) as pool:
+        pool.map(run_single_analysis, tickers)
+```
+
+## Monitoring
+
+### Logging
+
+Add structured logging:
+
+```python
+import logging
+import json
+
+class JSONFormatter(logging.Formatter):
+    def format(self, record):
+        log_obj = {
+            "timestamp": self.formatTime(record),
+            "level": record.levelname,
+            "message": record.getMessage(),
+            "module": record.module
+        }
+        return json.dumps(log_obj)
+
+handler = logging.StreamHandler()
+handler.setFormatter(JSONFormatter())
+app.logger.addHandler(handler)
+```
+
+### Health Checks
+
+Add health endpoint:
+
+```python
+@app.route("/health")
+def health():
+    return {
+        "status": "healthy",
+        "version": "1.0.0",
+        "jobs_running": len(get_running_jobs()),
+        "analyses_count": len(load_analyses())
+    }
+```
+
+### Prometheus Metrics
+
+```python
+from prometheus_flask_exporter import PrometheusMetrics
+
+metrics = PrometheusMetrics(app)
+
+# Custom metrics
+analysis_counter = metrics.counter(
+    'analysis_total', 
+    'Total analyses run',
+    labels={'ticker': lambda: request.json.get('ticker')}
+)
+```
+
+## Security
+
+### API Key Protection
+
+Never expose API keys in frontend:
+
+```python
+# Bad
+return jsonify({"api_key": settings["api_key"]})
+
+# Good
+return jsonify({"api_key": "*****" + settings["api_key"][-4:]})
+```
+
+### Input Validation
+
+```python
+from flask import request
+import re
+
+@app.route("/api/analyze", methods=["POST"])
+def analyze():
+    ticker = request.json.get("ticker", "").upper()
+    
+    # Validate ticker format
+    if not re.match(r'^[A-Z]{1,5}$', ticker):
+        return {"error": "Invalid ticker format"}, 400
+    
+    # Continue with analysis
+```
+
+### CORS Configuration
+
+```python
+from flask_cors import CORS
+
+# Restrict to specific origins
+CORS(app, origins=["https://yourdomain.com"])
 ```
 
 ## Troubleshooting
 
-### Common Issues
+### Memory Issues
 
-**UI won't start:**
-- Ensure all dependencies are installed: `pip install -r requirements.txt`
-- For Streamlit: `pip install streamlit`
-- For Flask: `pip install flask`
+For long-running analyses:
 
-**Analysis fails to start:**
-- Check API key is configured in Settings
-- Verify base_url is correct for your provider
-- Ensure you have API credits/quota
+```python
+# In background_worker.py
+import gc
 
-**Background jobs not running:**
-- Check `data/jobs/` directory exists and is writable
-- Verify background_worker.py has execute permissions
-- Check logs for error messages
+# Force garbage collection after each analyst
+gc.collect()
+```
 
-**Can't see past analyses:**
-- Verify `data/analyses.json` exists
-- Check file permissions
-- Ensure analyses completed successfully
+### Process Cleanup
 
-### Logs
+Ensure background processes are cleaned up:
 
-Check logs for debugging:
-- Streamlit logs: Terminal output
-- Flask logs: Terminal output  
-- Job logs: `data/jobs/<job_id>.json`
+```python
+import atexit
+import os
 
-## Tips & Best Practices
+def cleanup():
+    # Kill all child processes
+    import psutil
+    parent = psutil.Process(os.getpid())
+    for child in parent.children(recursive=True):
+        child.kill()
 
-### Performance
-
-- Use depth 3 for quick analyses (2-3 minutes)
-- Use depth 5 for comprehensive analysis (5-10 minutes)
-- Run multiple analyses in parallel for portfolio review
-- Stop unused analyses to free resources
-
-### Accuracy
-
-- Select all analysts for most balanced view
-- Use higher depth for complex decisions
-- Review historical analyses for patterns
-- Compare multiple tickers before trading
-
-### Cost Management
-
-- Start with depth 1-2 for initial screening
-- Increase depth only for promising opportunities
-- Monitor API usage in your provider dashboard
-- Consider rate limiting for bulk analyses
-
-## Contributing
-
-Contributions to the Web UI are welcome! Areas for improvement:
-
-- Additional chart visualizations
-- Export formats (PDF, Excel, etc.)
-- Portfolio tracking features
-- Alert systems for price movements
-- Backtesting integration
-- Multi-language support
-
-## License
-
-This Web UI is part of the TradingAgents project and is licensed under the MIT License.
-
-## Support
-
-- **Documentation**: [TradingAgents Docs](https://github.com/TauricResearch/TradingAgents)
-- **Issues**: [GitHub Issues](https://github.com/TauricResearch/TradingAgents/issues)
-- **Community**: [Discord](https://discord.com/invite/hk9PGKShPK)
-- **Research**: [Tauric Research](https://tauric.ai/)
+atexit.register(cleanup)
+```
 
 ---
 
-**Note**: This UI is for research purposes. Trading performance may vary based on many factors. It is not intended as financial, investment, or trading advice. Always do your own research before making trading decisions.
+For more help, check the [main README](./README.md) or [open an issue](https://github.com/ashrinkm/TradingAgents-UI/issues).

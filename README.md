@@ -8,7 +8,7 @@ A modern, user-friendly web interface for the [TradingAgents](https://github.com
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Flask](https://img.shields.io/badge/Flask-2.x-black?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 
 </div>
 
@@ -24,6 +24,17 @@ This Web UI provides an intuitive interface for running trading analyses using t
 - **Configure settings** easily through the UI
 
 Perfect for researchers, traders, and anyone who wants to leverage multi-agent LLM trading analysis without the complexity of command-line tools.
+
+## 📸 Screenshots
+
+### Main Dashboard
+![TradingAgents Dashboard](assets/screenshots/dashboard.png)
+
+### Real-Time Analysis
+![Analysis Progress](assets/screenshots/analysis.png)
+
+### Settings Configuration
+![Settings Page](assets/screenshots/settings.png)
 
 ## ✨ Features
 
@@ -89,13 +100,13 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-pip install streamlit
+pip install flask
 
-# Run the UI
-streamlit run web_ui.py --server.port 8501
+# Run the Web UI
+python app.py
 ```
 
-Open your browser to `http://localhost:8501` and you're ready to go!
+Open your browser to `http://localhost:5000` and you're ready to go!
 
 ### First-Time Setup
 
@@ -150,38 +161,21 @@ After completion, navigate to "History" to:
 - Stop jobs if they're taking too long
 - All jobs are tracked and recoverable
 
-## 🛠️ Alternative: Flask UI
-
-Prefer a traditional web framework? We also provide a Flask version:
-
-```bash
-# Install Flask
-pip install flask
-
-# Run Flask UI
-python app.py
-```
-
-Open `http://localhost:5000`
-
-Both UIs provide the same functionality - choose whichever you prefer!
-
 ## 📁 Project Structure
 
 ```
 TradingAgents-UI/
-├── web_ui.py                 # Streamlit UI (recommended)
-├── app.py                    # Flask UI (alternative)
+├── app.py                    # Flask web application
 ├── background_worker.py      # Background analysis processor
-├── templates/                # HTML templates for Flask
-│   └── index.html
+├── templates/                # HTML templates
+│   └── index.html           # Main UI template
 ├── tradingagents/           # Core TradingAgents framework
-├── assets/                  # Images and documentation assets
+├── assets/                  # Documentation assets
+│   └── screenshots/         # UI screenshots
 ├── data/                    # Runtime data (created automatically)
 │   ├── settings.json        # Your configuration
 │   ├── analyses.json        # Analysis history
 │   └── jobs/                # Background job tracking
-├── run_web.sh               # Streamlit launcher script
 ├── run_flask.sh             # Flask launcher script
 └── requirements.txt         # Python dependencies
 ```
@@ -226,12 +220,24 @@ The UI supports any OpenAI-compatible API endpoint:
 
 ## 🐳 Docker Deployment
 
-```bash
-# Build image
-docker build -t tradingagents-ui .
+```dockerfile
+FROM python:3.9-slim
 
-# Run container
-docker run -p 8501:8501 tradingagents-ui
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install flask
+
+COPY . .
+
+EXPOSE 5000
+CMD ["python", "app.py"]
+```
+
+Build and run:
+```bash
+docker build -t tradingagents-ui .
+docker run -p 5000:5000 tradingagents-ui
 ```
 
 Or use Docker Compose:
@@ -242,7 +248,7 @@ services:
   tradingagents-ui:
     build: .
     ports:
-      - "8501:8501"
+      - "5000:5000"
     volumes:
       - ./data:/app/data
     environment:
@@ -250,13 +256,6 @@ services:
 ```
 
 ## 🌐 Cloud Deployment
-
-### Streamlit Cloud (Free)
-
-1. Push this repo to GitHub
-2. Visit [share.streamlit.io](https://share.streamlit.io)
-3. Connect your repo
-4. Deploy with one click
 
 ### Heroku
 
@@ -270,6 +269,14 @@ git push heroku main
 
 Use the Docker image for deployment on any cloud platform.
 
+### PythonAnywhere
+
+1. Upload code to PythonAnywhere
+2. Create a web app with Flask
+3. Set virtual environment and install dependencies
+4. Configure environment variables
+5. Reload the app
+
 ## 🔍 Troubleshooting
 
 ### UI Won't Start
@@ -277,10 +284,13 @@ Use the Docker image for deployment on any cloud platform.
 ```bash
 # Ensure all dependencies are installed
 pip install -r requirements.txt
-pip install streamlit
+pip install flask
 
 # Check Python version (3.8+ required)
 python --version
+
+# Check for port conflicts
+lsof -i :5000  # Use a different port if needed
 ```
 
 ### Analysis Fails to Start
@@ -289,6 +299,7 @@ python --version
 - ✅ Verify base_url is correct
 - ✅ Ensure you have API credits/quota
 - ✅ Check logs in browser console (F12)
+- ✅ Review Flask console output for errors
 
 ### Background Jobs Not Running
 
@@ -297,7 +308,7 @@ python --version
 mkdir -p data/jobs
 
 # Check permissions
-chmod +x background_worker.py
+chmod +x background_worker.py run_flask.sh
 ```
 
 ### Can't See Past Analyses
@@ -305,6 +316,7 @@ chmod +x background_worker.py
 - Check `data/analyses.json` exists
 - Verify analyses completed successfully
 - Look for error messages in job files
+- Check file permissions
 
 ## 💡 Tips & Best Practices
 
