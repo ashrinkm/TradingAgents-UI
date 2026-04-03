@@ -27,14 +27,21 @@ Perfect for researchers, traders, and anyone who wants to leverage multi-agent L
 
 ## 📸 Screenshots
 
+<div align="center">
+
 ### Main Dashboard
-![TradingAgents Dashboard](assets/screenshots/dashboard.png)
+<img src="assets/screenshots/dashboard.png" alt="Dashboard" width="800"/>
 
-### Real-Time Analysis
-![Analysis Progress](assets/screenshots/analysis.png)
+### Analysis Form
+<img src="assets/screenshots/analysis.png" alt="Analysis" width="800"/>
 
-### Settings Configuration
-![Settings Page](assets/screenshots/settings.png)
+### Configuration
+<img src="assets/screenshots/settings.png" alt="Settings" width="800"/>
+
+### Mobile Responsive
+<img src="assets/screenshots/mobile.png" alt="Mobile View" width="400"/>
+
+</div>
 
 ## ✨ Features
 
