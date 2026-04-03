@@ -160,6 +160,33 @@ An interface will appear showing results as they load, letting you track the age
   <img src="assets/cli/cli_transaction.png" width="100%" style="display: inline-block; margin: 0 2%;">
 </p>
 
+## Web UI
+
+**New!** We now provide a modern web interface for TradingAgents with real-time progress monitoring, historical analysis review, and easy configuration management.
+
+### Quick Start
+
+```bash
+# Install Streamlit
+pip install streamlit
+
+# Run the Web UI
+cd TradingAgents
+streamlit run web_ui.py --server.port 8501
+```
+
+Then open `http://localhost:8501` in your browser.
+
+### Features
+
+- 📊 **Real-time progress tracking** - Watch analyses unfold step-by-step
+- 🎯 **Easy configuration** - Intuitive settings management
+- 📈 **History browser** - Review and search past analyses
+- 🔄 **Background processing** - Run multiple analyses simultaneously
+- 🌙 **Dark mode** - Easy on the eyes for long sessions
+
+**📖 [Full Web UI Documentation](./WEB_UI_README.md)**
+
 ## TradingAgents Package
 
 ### Implementation Details

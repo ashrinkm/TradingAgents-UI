@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Market Analyst</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f17;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; flex: 1; }
+        
+        /* Navbar */
+        .navbar {
+            background: #1a1a2e;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #2a1a2a;
+            margin-bottom: 24px;
+        }
+        .navbar-brand { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 8px; align-items: center; }
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #888;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-link:hover { background: #1a1a2a; color: #fff; }
+        .nav-link.active { background: #667eea; color: #fff; }
+        
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            padding: 16px 24px;
+            text-align: center;
+            border-top: 1px solid #1a1a2a;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer a { color: #667eea; text-decoration: none; }
+        
+        /* Login page */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f17 0%, #1a1a2e 100%);
+        }
+        .login-box {
+            background: #1a1a2e;
+            border: 1px solid #1a1a6a;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-logo { font-size: 48px; margin-bottom: 16px; }
+        .login-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .login-subtitle { color: #888; margin-bottom: 32px; }
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0f0f17;
+            border: 1px solid #1a1a6a;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        .login-input:focus { outline: none; border-color: #667eea; }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .login-btn:hover { background: #5a6fd6; }
+        .login-error { color: #f44336; margin-top: 16px; font-size: 14px; }
+        
+        /* Cards */
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #1a1a6a;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+        
+        /* Form elements */
+        .form-row { display: flex; gap: 6px; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 150px; }
+        .form-group label { display: block; margin-bottom: 6px; color: #888; font-size: 14px; }
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            background: #0f0f17;
+            border: 1px solid #1a1a6a;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            height: 44px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus { outline: none; border-color: #667eea; }
+        select { cursor: pointer; }
+        
+        /* Buttons */
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover { background: #5a6fd6; }
+        button:disabled { background: #444; cursor: not-allowed; }
+        button.secondary { background: #1a1a6a; }
+        button.secondary:hover { background: #3a3a5a; }
+        button.danger { background: #f44336; }
+        button.danger:hover { background: #d32f2f; }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+            border: 1px solid #1a1a6a;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .hero-content { flex: 1; min-width: 300px; }
+        .hero-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: 16px;
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .hero-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(102, 126, 234, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #a8b4ff;
+        }
+        .hero-feature-icon { font-size: 18px; }
+        .hero-image { flex: 1; min-width: 300px; text-align: center; }
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            background: #1a1a2e;
+            border: 1px solid #1a1a6a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .workflow-steps {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .workflow-step {
+            flex: 1;
+            min-width: 180px;
+            max-width: 220px;
+            text-align: center;
+            padding: 16px;
+        }
+        .workflow-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .workflow-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .workflow-desc {
+            font-size: 12px;
+            color: #888;
+            line-height: 1.4;
+        }
+        .workflow-arrow {
+            font-size: 24px;
+            color: #667eea;
+            padding-top: 24px;
+        }
+        
+        /* Analysis Form Card */
+        .analysis-form-card {
+            background: #1a1a2e;
+            border: 1px solid #1a1a6a;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        /* Checkbox grid */
+        .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0; }
+        .checkbox-item {
+            background: #1a1a2e;
+            border: 2px solid #1a1a6a;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .checkbox-item:hover { border-color: #667eea; background: #1f1f35; }
+        .checkbox-item.selected { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.15)); border-color: #667eea; }
+        .checkbox-item:not(.selected) { opacity: 0.5; }
+        .checkbox-item .analyst-icon { font-size: 28px; flex-shrink: 0; }
+        .checkbox-item .analyst-info { flex: 1; }
+        .checkbox-item .name { font-weight: 600; margin-bottom: 4px; font-size: 15px; }
+        .checkbox-item .desc { font-size: 12px; color: #888; line-height: 1.4; }
+        .checkbox-item.selected .desc { color: #aaa; }
+        
+        /* Job card */
+        .job-card {
+            background: #1a1a2e;
+            border: 1px solid #1a1a6a;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+        .job-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .job-ticker { font-size: 20px; font-weight: 700; }
+        .job-time { color: #888; margin-left: 12px; font-size: 14px; }
+        .job-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-running { background: #4CAF50; }
+        .status-completed { background: #2196F3; }
+        .status-failed { background: #f44336; }
+        .status-stopped { background: #FF9800; }
+        
+        /* Progress steps */
+        .progress-steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+        .step {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #2a2a4a;
+            color: #888;
+        }
+        .step.done { background: #4CAF50; color: #fff; }
+        .step.active { background: #667eea; color: #fff; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        
+        /* Logs */
+        .logs {
+            background: #0f0f17;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+            margin: 12px 0;
+        }
+        .log-line { margin: 4px 0; }
+        .log-time { color: #666; margin-right: 8px; }
+        .log-info { color: #888; }
+        .log-success { color: #4CAF50; }
+        .log-error { color: #f44336; }
+        .log-agent { color: #667eea; }
+        
+        /* History */
+        .history-item {
+            background: #1a1a2e;
+            border: 1px solid #1a1a6a;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 12px 0;
+        }
+        .history-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .history-ticker { font-size: 20px; font-weight: 700; }
+        .history-meta { color: #888; font-size: 14px; margin-top: 4px; }
+        .history-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .badge-buy { background: #4CAF50; }
+        .badge-sell { background: #f44336; }
+        .badge-hold { background: #FF9800; }
+        
+        .history-details {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            padding: 12px 0;
+            border-top: 1px solid #1a1a6a;
+            border-bottom: 1px solid #1a1a6a;
+            margin: 12px 0;
+        }
+        .detail-item { display: flex; flex-direction: column; gap: 4px; }
+        .detail-label { font-size: 12px; color: #888; text-transform: uppercase; }
+        .detail-value { font-size: 14px; font-weight: 500; }
+        
+        .history-actions { display: flex; gap: 8px; margin-top: 12px; }
+        
+        .analyst-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .analyst-tag {
+            padding: 4px 10px;
+            background: #1a1a6a;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        /* Decision display */
+        .decision-display {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .decision-badge {
+            display: inline-block;
+            padding: 12px 40px;
+            border-radius: 30px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        /* Sections */
+        .section { margin: 20px 0; }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #1a1a6a;
+        }
+        .report-content {
+            background: #0f0f17;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 8px 0;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Settings */
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        /* Mobile Optimization */
+        @media (max-width: 900px) {
+            .hero { flex-direction: column; text-align: center; padding: 24px 16px; }
+            .hero-title { font-size: 24px; }
+            .hero-subtitle { font-size: 14px; }
+            .hero-features { gap: 8px; }
+            .hero-feature { padding: 6px 12px; font-size: 12px; }
+            .hero-image { display: none; }
+            .workflow-arrow { display: none; }
+            .workflow-steps { flex-direction: column; align-items: center; }
+            .workflow-step { max-width: 100%; padding: 12px; }
+            .workflow-icon { font-size: 28px; }
+            .workflow-title { font-size: 13px; }
+        }
+        
+        @media (max-width: 768px) {
+            /* Container & General */
+            .container { padding: 12px; }
+            
+            /* Navbar */
+            .navbar { 
+                flex-direction: column; 
+                gap: 12px; 
+                padding: 12px 16px;
+                margin-bottom: 16px;
+            }
+            .navbar-brand { font-size: 20px; }
+            .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 6px; }
+            .nav-link { padding: 8px 12px; font-size: 14px; }
+            
+            /* Form Card */
+            .analysis-form-card { padding: 16px; margin-bottom: 16px; }
+            .analysis-form-card h2 { font-size: 18px; margin-bottom: 16px; }
+            
+            /* Form Row - Stack on mobile */
+            .form-row { flex-direction: column; gap: 12px; }
+            .form-group { width: 100%; min-width: 100%; }
+            
+            /* Inputs & Selects */
+            input, select { 
+                font-size: 16px; /* Prevents iOS zoom */
+                padding: 12px 14px;
+            }
+            
+            /* Buttons */
+            button { 
+                width: 100%; 
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            /* Checkbox Grid */
+            .checkbox-grid { grid-template-columns: 1fr; gap: 10px; }
+            .checkbox-item { padding: 14px; }
+            .checkbox-item .analyst-icon { font-size: 24px; }
+            .checkbox-item .name { font-size: 14px; }
+            .checkbox-item .desc { font-size: 11px; }
+            
+            /* Settings */
+            .settings-grid { grid-template-columns: 1fr; }
+            
+            /* How It Works */
+            .how-it-works { padding: 16px; margin-bottom: 16px; }
+            .how-it-works h3 { font-size: 14px; }
+            
+            /* Hero */
+            .hero { padding: 20px 16px; margin-bottom: 16px; }
+            .hero-title { font-size: 22px; }
+            .hero-subtitle { font-size: 13px; margin-bottom: 16px; }
+            .hero-features { gap: 6px; }
+            .hero-feature { padding: 5px 10px; font-size: 11px; }
+            .hero-feature-icon { font-size: 14px; }
+            
+            /* History Items */
+            .history-item { padding: 16px; }
+            .history-top { flex-direction: column; gap: 12px; text-align: center; }
+            .history-ticker { font-size: 18px; }
+            .history-meta { font-size: 12px; }
+            .history-details { 
+                flex-direction: column; 
+                gap: 12px; 
+                text-align: center;
+            }
+            .detail-item { align-items: center; }
+            .analyst-tags { justify-content: center; }
+            .history-actions { 
+                flex-direction: column; 
+                width: 100%;
+            }
+            .history-actions button { width: 100%; }
+            
+            /* Job Cards */
+            .job-card { padding: 14px; }
+            .job-header { flex-direction: column; gap: 8px; text-align: center; }
+            .job-ticker { font-size: 18px; }
+            .job-time { display: block; margin-left: 0; margin-top: 4px; }
+            .progress-steps { justify-content: center; }
+            .step { font-size: 11px; padding: 4px 8px; }
+            
+            /* Login */
+            .login-box { 
+                margin: 16px; 
+                padding: 24px 20px;
+                max-width: calc(100% - 32px);
+            }
+            .login-logo { font-size: 40px; }
+            .login-title { font-size: 22px; }
+            .login-subtitle { font-size: 14px; margin-bottom: 24px; }
+            .login-input { padding: 12px 14px; font-size: 16px; }
+            .login-btn { padding: 12px; }
+            
+            /* Analysis Detail */
+            .decision-badge { padding: 10px 30px; font-size: 22px; }
+            .analysis-section-header { padding: 10px 14px; font-size: 14px; }
+            .analysis-section-content { padding: 14px; }
+            .report-content { font-size: 13px; padding: 12px; }
+            
+            /* Footer */
+            .footer { padding: 12px 16px; font-size: 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar-brand span:last-child { font-size: 16px; }
+            .nav-link { padding: 6px 10px; font-size: 13px; }
+            .hero-title { font-size: 18px; }
+            .checkbox-item { padding: 12px; }
+            .checkbox-item .analyst-icon { font-size: 22px; }
+            .checkbox-item .name { font-size: 13px; }
+        }
+        
+        /* Sections in analysis view */
+        .analysis-section {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        .analysis-section-header {
+            padding: 12px 16px;
+            background: #2a2a4a;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .analysis-section-header:hover { background: #3a3a5a; }
+        .analysis-section-content {
+            padding: 16px;
+            display: none;
+        }
+        .analysis-section.expanded .analysis-section-content { display: block; }
+        .expand-icon { transition: transform 0.2s; }
+        .analysis-section.expanded .expand-icon { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">📊</div>
+            <h1 class="login-title">AI Market Analyst</h1>
+            <p class="login-subtitle">Sign in to access the platform</p>
+            <input type="text" id="username" class="login-input" placeholder="Username" autocomplete="username">
+            <input type="password" id="password" class="login-input" placeholder="Password" autocomplete="current-password">
+            <button class="login-btn" onclick="login()">Sign In</button>
+            <div id="login-error" class="login-error" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <!-- Main App -->
+    <div id="main-app" style="display: none; flex-direction: column; min-height: 100vh;">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <span>📊</span>
+                <span>AI Market Analyst</span>
+            </div>
+            <div class="nav-links">
+                <a class="nav-link active" onclick="showPage('analyze')">Analyze</a>
+                <a class="nav-link" onclick="showPage('history')">History</a>
+                <a class="nav-link" onclick="showPage('settings')">Settings</a>
+                <a class="nav-link secondary" onclick="logout()" style="margin-left: 8px;">Logout</a>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <!-- Analyze Page -->
+            <div id="page-analyze">
+                <!-- New Analysis Form -->
+                <div class="analysis-form-card">
+                    <h2 style="margin-bottom: 20px;">🚀 Start New Analysis</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ticker Symbol</label>
+                            <input type="text" id="ticker" value="AAPL" placeholder="e.g. AAPL">
+                        </div>
+                        <div class="form-group">
+                            <label>Analysis Date</label>
+                            <input type="date" id="analysis-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Research Depth</label>
+                            <select id="depth">
+                                <option value="1">1 - Quick (~2 min)</option>
+                                <option value="2" selected>2 - Standard (~4 min)</option>
+                                <option value="3">3 - Thorough (~6 min)</option>
+                                <option value="4">4 - Deep (~8 min)</option>
+                                <option value="5">5 - Comprehensive (~10 min)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="min-width: 140px;">
+                            <label>&nbsp;</label>
+                            <button onclick="startAnalysis()" id="analyze-btn" style="width: 100%;">🚀 Analyze</button>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 12px; margin-top: 24px;">Select Analysts <span style="color: #666; font-weight: normal;">(click to toggle)</span></h4>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item selected" data-value="market" onclick="toggleAnalyst(this)">
+                            <div class="analyst-icon">📊</div>
+                            <div class="analyst-info">
+                                <div class="name">Market Analyst</div>
+                                <div class="desc">Technical indicators, MACD, RSI, price patterns</div>
+                            </div>
+                        </div>
+                        <div class="checkbox-item selected" data-value="news" onclick="toggleAnalyst(this)">
+                            <div class="analyst-icon">📰</div>
+                            <div class="analyst-info">
+                                <div class="name">News Analyst</div>
+                                <div class="desc">Global news, macroeconomic events, company updates</div>
+                            </div>
+                        </div>
+                        <div class="checkbox-item selected" data-value="social" onclick="toggleAnalyst(this)">
+                            <div class="analyst-icon">💬</div>
+                            <div class="analyst-info">
+                                <div class="name">Sentiment Analyst</div>
+                                <div class="desc">Social media sentiment, market mood analysis</div>
+                            </div>
+                        </div>
+                        <div class="checkbox-item selected" data-value="fundamentals" onclick="toggleAnalyst(this)">
+                            <div class="analyst-icon">💰</div>
+                            <div class="analyst-info">
+                                <div class="name">Fundamentals Analyst</div>
+                                <div class="desc">Financial statements, earnings, valuation metrics</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Running Jobs -->
+                <div id="running-jobs"></div>
+                
+                <!-- Hero Section -->
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Multi-Agent AI Trading Analysis</h1>
+                        <p class="hero-subtitle">Powered by advanced LLMs, our AI agents collaborate through structured debates to deliver comprehensive market insights and trading decisions.</p>
+                        <div class="hero-features">
+                            <div class="hero-feature">
+                                <span class="hero-feature-icon">🤖</span>
+                                <span>4 Specialized Analysts</span>
+                            </div>
+                            <div class="hero-feature">
+                                <span class="hero-feature-icon">💬</span>
+                                <span>Structured Debates</span>
+                            </div>
+                            <div class="hero-feature">
+                                <span class="hero-feature-icon">⚖️</span>
+                                <span>Risk Assessment</span>
+                            </div>
+                            <div class="hero-feature">
+                                <span class="hero-feature-icon">🎯</span>
+                                <span>Clear Decisions</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <img src="https://raw.githubusercontent.com/TauricResearch/TradingAgents/main/assets/schema.png" alt="TradingAgents Framework" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                
+                <!-- How It Works -->
+                <div class="how-it-works">
+                    <h3 style="margin-bottom: 16px; color: #888;">How It Works</h3>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="workflow-icon">📊</div>
+                            <div class="workflow-title">1. Analysts Gather Data</div>
+                            <div class="workflow-desc">4 specialized agents analyze market data, news, social sentiment, and fundamentals</div>
+                        </div>
+                        <div class="workflow-arrow">→</div>
+                        <div class="workflow-step">
+                            <div class="workflow-icon">💬</div>
+                            <div class="workflow-title">2. Research Debate</div>
+                            <div class="workflow-desc">Bull and bear researchers critically assess findings through structured debates</div>
+                        </div>
+                        <div class="workflow-arrow">→</div>
+                        <div class="workflow-step">
+                            <div class="workflow-icon">📈</div>
+                            <div class="workflow-title">3. Trading Plan</div>
+                            <div class="workflow-desc">Trader synthesizes insights into actionable trading strategies</div>
+                        </div>
+                        <div class="workflow-arrow">→</div>
+                        <div class="workflow-step">
+                            <div class="workflow-icon">⚖️</div>
+                            <div class="workflow-title">4. Risk Assessment</div>
+                            <div class="workflow-desc">Risk team evaluates portfolio exposure and provides final recommendation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- History Page -->
+            <div id="page-history" style="display: none;">
+                <h2 style="margin-bottom: 20px;">Analysis History</h2>
+                <div id="history-list"></div>
+            </div>
+            
+            <!-- Analysis Detail Page -->
+            <div id="page-analysis" style="display: none;">
+                <button class="secondary" onclick="showPage('history')" style="margin-bottom: 20px;">← Back to History</button>
+                <div id="analysis-detail"></div>
+            </div>
+            
+            <!-- Settings Page -->
+            <div id="page-settings" style="display: none;">
+                <h2 style="margin-bottom: 20px;">Settings</h2>
+                <div class="card">
+                    <div class="settings-grid">
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" id="settings-api-key">
+                        </div>
+                        <div class="form-group">
+                            <label>Base URL</label>
+                            <input type="text" id="settings-base-url">
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" downloadPDF">
+                            <input type="text" id="settings-model">
+                        </div>
+                        <div class="form-group">
+                            <label>Provider Name</label>
+                            <input type="text" id="settings-provider">
+                        </div>
+                    </div>
+                    <button onclick="saveSettings()" style="margin-top: 20px;">Save Settings</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            Powered by <a href="https://github.com/AI4Finance-Foundation/TradingAgents" target="_blank">TradingAgents</a>
+        </footer>
+    </div>
+    
+    <script>
+        // Credentials
+        const VALID_USERNAME = 'admin';
+        const VALID_PASSWORD = 'markettrader';
+        
+        // Check session
+        function checkAuth() {
+            const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
+            if (loggedIn) {
+                showMainApp();
+            }
+        }
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('login-error');
+            
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                sessionStorage.setItem('loggedIn', 'true');
+                showMainApp();
+            } else {
+                errorEl.textContent = 'Invalid username or password';
+                errorEl.style.display = 'block';
+            }
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('loggedIn');
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+        
+        function showMainApp() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            loadRunningJobs();
+        }
+        
+        // Enter key for login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+        document.getElementById('username').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('password').focus();
+        });
+        
+        // Set default date to yesterday
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        document.getElementById('analysis-date').value = yesterday.toISOString().split('T')[0];
+        
+        // Toggle analyst selection
+        function toggleAnalyst(el) {
+            el.classList.toggle('selected');
+        }
+        
+        // Navigation
+        function showPage(page) {
+            document.querySelectorAll('[id^="page-"]').forEach(p => p.style.display = 'none');
+            document.getElementById('page-' + page).style.display = 'block';
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (page === 'history') loadHistory();
+            if (page === 'settings') loadSettings();
+            if (page === 'analyze') loadRunningJobs();
+        }
+        
+        // Get selected analysts
+        function getSelectedAnalysts() {
+            return Array.from(document.querySelectorAll('.checkbox-item.selected'))
+                .map(el => el.dataset.value);
+        }
+        
+        // Toggle analyst selection
+        function toggleAnalyst(el) {
+            el.classList.toggle('selected');
+        }
+        
+        // Start analysis
+        async function startAnalysis() {
+            const ticker = document.getElementById('ticker').value.toUpperCase();
+            const date = document.getElementById('analysis-date').value;
+            const depth = parseInt(document.getElementById('depth').value);
+            const analysts = getSelectedAnalysts();
+            
+            if (!ticker) return alert('Enter a ticker');
+            if (analysts.length === 0) return alert('Select at least one analyst');
+            
+            const btn = document.getElementById('analyze-btn');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Starting...';
+            
+            try {
+                const res = await fetch('/api/jobs/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticker, date, analysts, depth })
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = '🚀 Analyze';
+                } else {
+                    btn.innerHTML = '✅ Started!';
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = '🚀 Analyze';
+                        loadRunningJobs();
+                    }, 1500);
+                }
+            } catch (e) {
+                alert('Failed to start analysis');
+                btn.disabled = false;
+                btn.innerHTML = '🚀 Analyze';
+            }
+        }
+        
+        // Load running jobs
+        let pollInterval = null;
+        
+        async function loadRunningJobs() {
+            try {
+                const res = await fetch('/api/jobs/running');
+                const jobs = await res.json();
+                
+                const container = document.getElementById('running-jobs');
+                
+                if (jobs.length === 0) {
+                    container.innerHTML = '';
+                    if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+                    return;
+                }
+                
+                container.innerHTML = '<h3 style="margin-bottom: 16px;">🔄 Running Analyses</h3>';
+                
+                for (const job of jobs) {
+                    container.innerHTML += renderJobCard(job);
+                }
+                
+                // Auto-poll while jobs running
+                if (!pollInterval) {
+                    pollInterval = setInterval(loadRunningJobs, 3000);
+                }
+            } catch (e) {
+                console.error('Failed to load jobs', e);
+            }
+        }
+        
+        function renderJobCard(job) {
+            const jobId = job.job_id;
+            const status = job.status;
+            const progress = job.progress || {};
+            const logs = job.logs || [];
+            const result = job.result;
+            const error = job.error;
+            
+            const steps = [
+                ['init', 'Initializing'],
+                ['market', 'Market'],
+                ['analysts', 'Analysts'],
+                ['research', 'Research'],
+                ['trading', 'Trading'],
+                ['risk', 'Risk'],
+                ['final', 'Final']
+            ];
+            
+            let stepsHtml = '';
+            for (const [key, name] of steps) {
+                const s = progress[key] || 'pending';
+                const cls = s === 'done' ? 'done' : (s === 'active' ? 'active' : '');
+                stepsHtml += `<span class="step ${cls}">${name}</span>`;
+            }
+            
+            let logsHtml = '';
+            if (logs.length > 0) {
+                const recentLogs = logs.slice(-15).map(l => {
+                    const type = l.type || 'info';
+                    return `<div class="log-line"><span class="log-time">${l.time}</span><span class="log-${type}">${l.msg}</span></div>`;
+                }).join('');
+                logsHtml = `<div class="logs">${recentLogs}</div>`;
+            }
+            
+            let actionsHtml = '';
+            if (status === 'running') {
+                actionsHtml = `<button class="danger" onclick="stopJob('${jobId}')">⏹️ Stop</button>`;
+            } else if (status === 'completed') {
+                actionsHtml = `
+                    <button onclick="viewInHistory('${job.ticker}')">📊 View in History</button>
+                    <button class="secondary" onclick="clearJob('${jobId}')">🗑️ Clear</button>
+                `;
+            } else {
+                actionsHtml = `
+                    ${error ? `<span style="color: #f44336;">Error: ${error}</span>` : ''}
+                    <button class="secondary" onclick="clearJob('${jobId}')">🗑️ Clear</button>
+                `;
+            }
+            
+            const startedAt = job.started_at ? job.started_at.substring(0, 19).replace('T', ' ') : '';
+            
+            return `
+                <div class="job-card">
+                    <div class="job-header">
+                        <div>
+                            <span class="job-ticker">${job.ticker}</span>
+                            <span class="job-time">${startedAt}</span>
+                        </div>
+                        <span class="job-status status-${status}">${status.toUpperCase()}</span>
+                    </div>
+                    <div class="progress-steps">${stepsHtml}</div>
+                    ${status === 'running' ? logsHtml : ''}
+                    ${result ? `<div style="margin-top: 12px; color: #4CAF50; font-weight: 600;">Decision: ${result}</div>` : ''}
+                    <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center;">
+                        ${actionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function stopJob(jobId) {
+            await fetch(`/api/jobs/${jobId}/stop`, { method: 'POST' });
+            loadRunningJobs();
+        }
+        
+        async function clearJob(jobId) {
+            await fetch(`/api/jobs/${jobId}/clear`, { method: 'POST' });
+            loadRunningJobs();
+        }
+        
+        function viewInHistory(ticker) {
+            showPage('history');
+        }
+        
+        // History
+        async function loadHistory() {
+            try {
+                const res = await fetch('/api/analyses');
+                const analyses = await res.json();
+                
+                const container = document.getElementById('history-list');
+                
+                if (analyses.length === 0) {
+                    container.innerHTML = '<p style="color: #888;">No analyses yet. Run your first analysis!</p>';
+                    return;
+                }
+                
+                container.innerHTML = analyses.map((a, i) => {
+                    const dec = a.decision || 'HOLD';
+                    const badgeClass = dec.includes('BUY') ? 'badge-buy' : (dec.includes('SELL') ? 'badge-sell' : 'badge-hold');
+                    const time = a.timestamp ? a.timestamp.substring(0, 19).replace('T', ' ') : '';
+                    const depth = a.depth || 2;
+                    const depthLabels = ['', 'Quick', 'Standard', 'Thorough', 'Deep', 'Comprehensive'];
+                    const depthLabel = depthLabels[depth] || 'Standard';
+                    const analysts = a.analysts || ['market', 'news', 'social', 'fundamentals'];
+                    
+                    const analystLabels = {
+                        'market': '📊 Market',
+                        'news': '📰 News',
+                        'social': '💬 Social',
+                        'fundamentals': '💰 Fundamentals'
+                    };
+                    
+                    const analystTags = analysts.map(a => `<span class="analyst-tag">${analystLabels[a] || a}</span>`).join('');
+                    
+                    return `
+                        <div class="history-item">
+                            <div class="history-top">
+                                <div>
+                                    <div class="history-ticker">${a.ticker}</div>
+                                    <div class="history-meta">${a.date} • ${time}</div>
+                                    <div class="analyst-tags">${analystTags}</div>
+                                </div>
+                                <span class="history-badge ${badgeClass}">${dec}</span>
+                            </div>
+                            <div class="history-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Research Depth</span>
+                                    <span class="detail-value">Level ${depth} - ${depthLabel}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Analysts Used</span>
+                                    <span class="detail-value">${analysts.length} of 4</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Analysis Type</span>
+                                    <span class="detail-value">${analysts.length === 4 ? 'Full Analysis' : 'Partial Analysis'}</span>
+                                </div>
+                            </div>
+                            <div class="history-actions">
+                                <button onclick="viewAnalysis(${i})">View Details</button>
+                                <button class="secondary" onclick="downloadJSON(${i})">📥 JSON</button>
+                                <button onclick="downloadPDF(${i})">📄 PDF</button>
+                                <button class="danger" onclick="deleteAnalysis(${i})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Failed to load history', e);
+            }
+        }
+        
+        async function viewAnalysis(index) {
+            try {
+                const res = await fetch('/api/analyses');
+                const analyses = await res.json();
+                const analysis = analyses[index];
+                
+                if (!analysis) return;
+                
+                const dec = analysis.decision || 'HOLD';
+                const badgeClass = dec.includes('BUY') ? 'badge-buy' : dec.includes('SELL') ? 'badge-sell' : 'badge-hold';
+                
+                const data = analysis.full_data || {};
+                const depth = analysis.depth || 2;
+                const depthLabels = ['', 'Quick', 'Standard', 'Thorough', 'Deep', 'Comprehensive'];
+                const analysts = analysis.analysts || [];
+                
+                const sections = [
+                    ['Analysts Reports', [
+                        ['Market Report', 'market_report'],
+                        ['Sentiment Report', 'sentiment_report'],
+                        ['News Report', 'news_report'],
+                        ['Fundamentals Report', 'fundamentals_report']
+                    ]],
+                    ['Research', [
+                        ['Trading Plan', 'trader_investment_plan']
+                    ]],
+                    ['Final Decision', [
+                        ['Decision', 'final_trade_decision']
+                    ]]
+                ];
+                
+                let sectionsHtml = '';
+                for (const [sectionName, items] of sections) {
+                    let itemsHtml = '';
+                    for (const [name, key] of items) {
+                        const content = data[key];
+                        if (content) {
+                            itemsHtml += `
+                                <div class="analysis-section">
+                                    <div class="analysis-section-header" onclick="this.parentElement.classList.toggle('expanded')">
+                                        <span>${name}</span>
+                                        <span class="expand-icon">▼</span>
+                                    </div>
+                                    <div class="analysis-section-content">
+                                        <div class="report-content">${content}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    if (itemsHtml) {
+                        sectionsHtml += `
+                            <div class="section">
+                                <div class="section-title">${sectionName}</div>
+                                ${itemsHtml}
+                            </div>
+                        `;
+                    }
+                }
+                
+                document.getElementById('analysis-detail').innerHTML = `
+                    <h2>${analysis.ticker} Analysis</h2>
+                    <p style="color: #888; margin-bottom: 12px;">Date: ${analysis.date} • Saved: ${analysis.timestamp?.substring(0, 19).replace('T', ' ') || ''}</p>
+                    <p style="color: #888; margin-bottom: 20px;">Depth: Level ${depth} - ${depthLabels[depth]} • Analysts: ${analysts.join(', ')}</p>
+                    
+                    <div class="decision-display">
+                        <span class="decision-badge ${badgeClass}">${dec}</span>
+                    </div>
+                    
+                    ${sectionsHtml}
+                    
+                    <div style="margin-top: 30px; display: flex; gap: 12px;">
+                        <button onclick="downloadJSON(${index})">📥 Download JSON</button>
+                        <button onclick="downloadPDF(${index})">📄 Download PDF</button>
+                    </div>
+                `;
+                
+                showPage('analysis');
+            } catch (e) {
+                console.error('Failed to load analysis', e);
+            }
+        }
+        
+        async function deleteAnalysis(index) {
+            if (!confirm('Delete this analysis?')) return;
+            await fetch(`/api/analyses/${index}`, { method: 'DELETE' });
+            loadHistory();
+        }
+        
+        async function downloadJSON(index) {
+            const res = await fetch('/api/analyses');
+            const analyses = await res.json();
+            const data = analyses[index];
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${data.ticker}_${data.date}_analysis.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        async function downloadPDF(index) {
+            const res = await fetch(`/api/analyses/${index}/pdf`);
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const contentDisp = res.headers.get('Content-Disposition');
+                let filename = 'analysis_report.pdf';
+                if (contentDisp) {
+                    const match = contentDisp.match(/filename="?(.+?)"/);
+                    if (match) filename = match[1];
+                }
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            } else {
+                const err = await res.json();
+                alert('Failed to generate PDF: ' + (err.error || 'Unknown error'));
+            }
+        }
+        
+        // Settings
+        async function loadSettings() {
+            try {
+                const res = await fetch('/api/settings');
+                const settings = await res.json();
+                document.getElementById('settings-api-key').value = settings.api_key || '';
+                document.getElementById('settings-base-url').value = settings.base_url || '';
+                document.getElementById('settings-model').value = settings.model || '';
+                document.getElementById('settings-provider').value = settings.provider_name || '';
+            } catch (e) {
+                console.error('Failed to load settings', e);
+            }
+        }
+        
+        async function saveSettings() {
+            const settings = {
+                api_key: document.getElementById('settings-api-key').value,
+                base_url: document.getElementById('settings-base-url').value,
+                model: document.getElementById('settings-model').value,
+                provider_name: document.getElementById('settings-provider').value
+            };
+            
+            try {
+                await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                alert('Settings saved!');
+            } catch (e) {
+                alert('Failed to save settings');
+            }
+        }
+        
+        // Check auth on load
+        checkAuth();
+    </script>
+</body>
+</html>
