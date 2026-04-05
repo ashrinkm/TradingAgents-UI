@@ -557,21 +557,8 @@
     </style>
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="login-page" class="login-container">
-        <div class="login-box">
-            <div class="login-logo">📊</div>
-            <h1 class="login-title">AI Market Analyst</h1>
-            <p class="login-subtitle">Sign in to access the platform</p>
-            <input type="text" id="username" class="login-input" placeholder="Username" autocomplete="username">
-            <input type="password" id="password" class="login-input" placeholder="Password" autocomplete="current-password">
-            <button class="login-btn" onclick="login()">Sign In</button>
-            <div id="login-error" class="login-error" style="display: none;"></div>
-        </div>
-    </div>
-    
     <!-- Main App -->
-    <div id="main-app" style="display: none; flex-direction: column; min-height: 100vh;">
+    <div id="main-app" style="display: flex; flex-direction: column; min-height: 100vh;">
         <nav class="navbar">
             <div class="navbar-brand">
                 <span>📊</span>
@@ -581,7 +568,6 @@
                 <a class="nav-link active" onclick="showPage('analyze')">Analyze</a>
                 <a class="nav-link" onclick="showPage('history')">History</a>
                 <a class="nav-link" onclick="showPage('settings')">Settings</a>
-                <a class="nav-link secondary" onclick="logout()" style="margin-left: 8px;">Logout</a>
             </div>
         </nav>
         
@@ -759,54 +745,6 @@
     </div>
     
     <script>
-        // Credentials
-        const VALID_USERNAME = 'admin';
-        const VALID_PASSWORD = 'markettrader';
-        
-        // Check session
-        function checkAuth() {
-            const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
-            if (loggedIn) {
-                showMainApp();
-            }
-        }
-        
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorEl = document.getElementById('login-error');
-            
-            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-                sessionStorage.setItem('loggedIn', 'true');
-                showMainApp();
-            } else {
-                errorEl.textContent = 'Invalid username or password';
-                errorEl.style.display = 'block';
-            }
-        }
-        
-        function logout() {
-            sessionStorage.removeItem('loggedIn');
-            document.getElementById('login-page').style.display = 'flex';
-            document.getElementById('main-app').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-        
-        function showMainApp() {
-            document.getElementById('login-page').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-            loadRunningJobs();
-        }
-        
-        // Enter key for login
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') login();
-        });
-        document.getElementById('username').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') document.getElementById('password').focus();
-        });
-        
         // Set default date to yesterday
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -1223,8 +1161,8 @@
             }
         }
         
-        // Check auth on load
-        checkAuth();
+        // Load initial data on page load
+        loadRunningJobs();
     </script>
 </body>
 </html>
